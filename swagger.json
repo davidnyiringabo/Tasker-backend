@@ -1,0 +1,134 @@
+{
+    "swagger":"2.0",
+    "info": {
+        "description":"this is a swagger documentation for vanica entreprise",
+        "title":"vanica entreprise"
+    },
+    "tags":[
+        {
+            "name":"Login"
+        }
+    ],
+    "paths":{
+        "/v1/api/login":{
+            "post":{
+                "tags":[
+                    "Login"
+                ],
+                "summary": "user login  ",
+                "consumes":[
+                    "application/json"
+                ],
+                "produces":[
+                    "application/json"
+                ],
+                "parameters":[
+                    {
+                        "in":"body",
+                        "name":"body",
+                        "type":"object",
+                        "properties":{
+                            "username":{
+                                "type":"string",
+                                "required":true
+                            },
+                            "email":{
+                                "type":"string",
+                                "required":true
+                            },
+                            "password":{
+                                "type":"string",
+                                "required":true
+                            }
+                        }
+                    }
+                ],
+                "responses":{
+                    "201":{
+                    "description":"user found"
+                },
+                "401":{
+                    "description":"unauthorised"
+                },
+                "400":{
+                    "description":"Invalid Data"
+                },
+                "500":{
+                    "description":"Internal server error"
+                }
+            }
+            },
+
+            "get":{
+                "tags":[
+                    "Login"
+                ],
+                "summary": "user login  ",
+                "produces":[
+                    "application/json"
+                ],
+                "responses":{
+                "200":{
+                    "description":"page found"
+                },
+                "404":{
+                    "description":"page not found"
+                },
+                "500":{
+                    "description":"Internal server error"
+                }
+            }
+            }
+
+        },
+        "/v1/api/signup":{
+            "post":{
+                "tags":[
+                    "Signup"
+                ],
+                "summary": "create a new user  ",
+                "consumes":[
+                    "application/json"
+                ],
+                "produces":[
+                    "application/json"
+                ],
+                "parameters":[
+                    {
+                        "in":"body",
+                        "name":"body",
+                        "type":"object",
+                        "properties":{
+                            "username":{
+                                "type":"string",
+                                "required":true
+                            },
+                            "email":{
+                                "type":"string",
+                                "required":true
+                            },
+                            "password":{
+                                "type":"string",
+                                "required":true
+                            }
+                        }
+                    }
+                ],
+                "responses":{
+                    "200":{
+                    "description":"Success"
+                },
+                "201":{
+                    "description":"Created"
+                },
+                "400":{
+                    "description":"Invalid Data"
+                },
+                "500":{
+                    "description":"Internal server error"
+                }
+            }
+            }
+        }
+    }
+}

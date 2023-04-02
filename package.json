@@ -1,0 +1,31 @@
+{
+  "name": "mongodb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js",
+    "build": "tailwindcss build assets/css/src/styles.css -o assets/css/public/styles.css"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "ejs": "^3.1.8",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "mongodb": "^5.1.0",
+    "mongoose": "^7.0.0",
+    "morgan": "^1.10.0",
+    "node": "^19.6.1",
+    "path": "^0.12.7",
+    "swagger": "^0.7.5",
+    "swagger-ui-express": "^4.6.2",
+    "tailwindcss": "^3.2.7"
+  }
+}
