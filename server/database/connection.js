@@ -10,7 +10,4 @@ const connectionToDB = async ()=>{
             console.log("this is the error",err)
         }    
 }
-
-
-
 module.exports = connectionToDB
