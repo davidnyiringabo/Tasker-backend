@@ -19,16 +19,14 @@ route.post("/api/login",controllers.findUser)
 route.get("/signup",(req,res)=>{
     res.send("this is the signup page")
 })
-// route.get("/users",controllers.getUsers)
 route.post("/api/signup",controllers.createUser)
 route.get("/api/tasks/:email",controllers.getTasks)
-route.put("/updateUser",controllers.updateUser)
+route.put("/api/updateUser/:email",controllers.updateUser)
 route.get("/api/deleteTask/:id",controllers.deleteTask)
+route.get("/api/getUser/:email",controllers.getUsers)
+route.put("/api/updateAscompleted/:id",controllers.updateAscompleted)
 route.get("/api/check-auth",requestAuth, controllers.checkAuth)
-
-route.get("/api/homepage",(req,res)=>{
-    res.send("Welcome to the home page")
-})   
+route.post("/api/saveFeedback", controllers.saveFeedback)  
 route.post("/api/createTask",controllers.createNewTask)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
 
 module.exports = route

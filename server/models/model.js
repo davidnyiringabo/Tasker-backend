@@ -13,6 +13,10 @@ var schemaForUser = new mongoose.Schema({
     password:{
         type: String,
         required: true,
+    },
+    about:{
+        type: String,
+        required: false
     }
 
 })
@@ -29,7 +33,10 @@ const schemaForTask = new mongoose.Schema({
     category:{
         type: String,
         required: true
-    },deadline:{
+    },deadline_day:{
+        type: String,
+        required: true
+    },deadline_time:{
         type: String,
         required: true
     },completed:{
@@ -42,14 +49,26 @@ const schemaForTask = new mongoose.Schema({
     }
 
 })
-
+ 
+ const NotificationSchema = new mongoose.Schema({
+    email: {
+        type: String,
+        required: true
+    },
+    feedback: {
+        type: String,
+        required: true
+    }
+ })
  const DbTask = mongoose.model("userTasks",schemaForTask)
  const DbUser = mongoose.model("DbUser",schemaForUser)
+ const NotificationDb = mongoose.model("NotificationDb",NotificationSchema)
 
- schemaForUser.post('save', function(doc,next){
-    console.log(doc)
- })
+//  schemaForUser.post('save', function(doc,next){
+//     console.log(doc)
+//  })
 
  module.exports.DbUser = DbUser
  module.exports.DbTask = DbTask
+ module.exports.NotificationDb = NotificationDb
 

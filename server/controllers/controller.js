@@ -1,9 +1,10 @@
 const DbStaffs = require("../models/model")
 const DbUser = DbStaffs.DbUser
 const DbTask = DbStaffs.DbTask
+const NotificationDb = DbStaffs.NotificationDb
 const bcyrpt = require("bcrypt")
 const jwt = require("jsonwebtoken")
-const cookieParser = require('cookie-parser')
+const { ObjectId } = require("mongodb")
 exports.createUser = async (req,res)=>{
     
     if(!req.body.username && !req.body.email && !req.body.password){
@@ -11,38 +12,30 @@ exports.createUser = async (req,res)=>{
         res.status(400).send(" ERROR : We can never save empty credentials in our database")
     }else{
 
-
            const salt = await bcyrpt.genSalt(14)
            const hashedPass = await bcyrpt.hash(req.body.password,salt)
 
-
-
-         const user= new DbUser({
+            const user= new DbUser({
             username: req.body.username,
             email: req.body.email,
-            password: hashedPass
-
+            password: hashedPass            
         })
-        
-
          user.save(user)
-            .then(data=>{
-                console.log(data)
+            .then(()=>{
                 res.send("User created successfully")
             })       
             .catch(err=>{
                 console.log("there was an error ",err)
                 res.status(500).send(err)
-            })
-        
+            })        
     }
 }
 
 exports.getTasks = (req,res)=>{
-    console.log(req.params.email)
+    // console.log(req.params.email)
     DbTask.find({email: req.params.email}).sort({ timestamp: -1 })
       .then((response)=>{
-        console.log(response)
+        // console.log(response)
         res.send(response)
 
       })
@@ -68,34 +61,30 @@ exports.getTasks = (req,res)=>{
 
 // -----------------------------CONTROLLER FOR CREATING A NEW TASK-------------------------------------------
 exports.createNewTask = (req,res)=>{
-    console.log(req.body)
-    
+ 
     DbTask.create({
         description: req.body.description,
         category: req.body.category,
-        deadline: req.body.deadline,
+        deadline_day: req.body.deadline_day,
+        deadline_time: req.body.deadline_time,
         completed: req.body.completed,
         email: req.body.email,
-        timestamp: req.body.timestamp,
-
+        timestamp: req.body.timestamp
+    })      .then((response)=>{
+        res.send(response)
     })
-            .then(response=>{
-                console.log(response)
-            })
             .catch(err=>{
                 console.log(err)
             })
-
-    // res.send("the data received");
 }
 exports.deleteTask = (req,res)=>{
     console.log("the request is received")
-    console.log(req.params.id)
-   DbUser.deleteOne({_id: req.params.id})
-    .then(response=>{
-        console.log("requset handled")
+    // console.log(req.params.id)
+   DbTask.deleteOne({_id: new ObjectId(req.params.id)})
+    .then(respons=>{
+        // console.log(respons)
         res
-        .send(response)
+        .send(respons)
     })
 }
 // --------------------------------------------------------------------------------------------------------------
@@ -103,7 +92,6 @@ exports.deleteTask = (req,res)=>{
 exports.findUser = async (req,res)=>{
      
     const user =await DbUser.findOne({email: req.body.email})
-       console.log(user)
        if(!user){
         res.status(201).send("This account doesn't exist, Create account instead")
         }
@@ -126,7 +114,7 @@ exports.findUser = async (req,res)=>{
                     catch(err){
                         console.log("There is an error in making a cookie",err)
                     }
-                    
+                    res.cookie("email",req.body.email)
                     res.status(200).send("Logged in successfully")
                     // res.status(200).send(token)
 
@@ -141,11 +129,11 @@ exports.findUser = async (req,res)=>{
            catch(error){
             console.log(error)
            }
+// ------------------------------------------------------------------------------------------------------------------------------------
+}
 
-            
-  exports.getUsers = (req,res)=>{
-    try{
-        DbUser.findOne({email: req.body.email})
+exports.getUsers = (req,res)=>{
+        DbUser.findOne({email: req.params.email})
         .then(data=>{
             res.send(data)
         })
@@ -153,16 +141,6 @@ exports.findUser = async (req,res)=>{
             res.status(500).send("Error",err)
         })
     }
-
-    catch(err){
-        console.log("There is an error", err)
-    }
-   
-}
-
-// ------------------------------------------------------------------------------------------------------------------------------------
-
-}
 // ROUTE WITH ERRORS 💀💀💀💀💀💀💀💀💀💀💀💀💀💀💀💀💀💀💀💀💀💀💀💀💀💀💀💀💀--------------------------------------------------------------
 exports.checkAuth = (req,res)=>{
 
@@ -178,10 +156,28 @@ exports.checkAuth = (req,res)=>{
 //  ------------------------------------------------------------------------------------------------------------------
 
  exports.updateUser = (req,res)=>{
-
-    DbUser.updateOne({email: req.body.email}, {$set: {username: req.body.username,password: req.body.password}})
-        .then(results=>{
-            res.send(results)
+    console.log(req.params.email)
+    DbUser.updateOne({email: req.params.email}, {$set: {username: req.body.name, about: req.body.about}})
+        .then(result=>{
+            res.send(result)
         })
+        .catch(err=>{
+            console.log(err)
+        })
+}
+
+exports.updateAscompleted = (req,res)=>{
+    console.log(req.params.id)
+    DbTask.updateOne({_id: new ObjectId(req.params.id)}, {$set: {completed: true}})
+    .then(()=>{
+        res.send("updated successfully")
+    })
+    .catch(err=>{
+        console.log(err)
+    })
+}
+
+exports.saveFeedback = (req,res)=>{
+    console.log(req.body)
 }
 

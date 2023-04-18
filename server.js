@@ -8,7 +8,6 @@ const cookieParser = require('cookie-parser')
 const swaggerUI = require("swagger-ui-express")
 const app = express()
 const swaggerDocument = require('./swagger.json')
-const base_url = process.env.BASE_URL
 app.use('/v1/api/swagger-doc', swaggerUI.serve, swaggerUI.setup(swaggerDocument))
 app.use(cors())
 app.use(express.json())
@@ -22,18 +21,12 @@ const { default: mongoose } = require("mongoose")
 app.use(express.static(__dirname+"/views/"))
 dotenv.config({path: "./config.env"})
 const PORT = process.env.PORT||8080
+const base_url = process.env.BASE_URL
 app.use(morgan("tiny"))
 
 connectionToDB()
 
-app.set('view engine','ejs')
-
-app.use(express.static(path.resolve(__dirname,"assets/css/public")))
-app.use(express.static(path.resolve(__dirname,"assets/img")))
-app.use(express.static(path.resolve(__dirname,"assets/js")))
-
-
 app.listen(PORT,()=>{
-    console.log(`The server is running at the port ${base_url}:`+PORT)
+    console.log(`The server is running at the port ${base_url}`)
 })
 
