@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken")
-const DbUser = require("../models/model")
+const DbUser = require("../models/User.model")
 const token = require("../controllers/controller");
 const { decode } = require("punycode");
 

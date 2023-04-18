@@ -1,12 +1,12 @@
-const DbStaffs = require("../models/model")
-const DbUser = DbStaffs.DbUser
-const DbTask = DbStaffs.DbTask
-const NotificationDb = DbStaffs.NotificationDb
+const DbUser = require("../models/User.model")
+const DbTask = require("../models/Task.model")
+const NotificationDb = require("../models/Notification.model")
 const bcyrpt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 const { ObjectId } = require("mongodb")
+
 exports.createUser = async (req,res)=>{
-    
+    console.log(req.body)
     if(!req.body.username && !req.body.email && !req.body.password){
 
         res.status(400).send(" ERROR : We can never save empty credentials in our database")
@@ -32,10 +32,9 @@ exports.createUser = async (req,res)=>{
 }
 
 exports.getTasks = (req,res)=>{
-    // console.log(req.params.email)
     DbTask.find({email: req.params.email}).sort({ timestamp: -1 })
       .then((response)=>{
-        // console.log(response)
+        console.log(response)
         res.send(response)
 
       })
@@ -78,8 +77,6 @@ exports.createNewTask = (req,res)=>{
             })
 }
 exports.deleteTask = (req,res)=>{
-    console.log("the request is received")
-    // console.log(req.params.id)
    DbTask.deleteOne({_id: new ObjectId(req.params.id)})
     .then(respons=>{
         // console.log(respons)
@@ -89,13 +86,13 @@ exports.deleteTask = (req,res)=>{
 }
 // --------------------------------------------------------------------------------------------------------------
 
-exports.findUser = async (req,res)=>{
-     
+exports.findUser = async (req,res)=>{     
     const user =await DbUser.findOne({email: req.body.email})
        if(!user){
         res.status(201).send("This account doesn't exist, Create account instead")
         }
-            try{             
+            try{        
+
                 if(await bcyrpt.compare(req.body.password, user.password)){
 
                     const exp = Date.now() + 1000 * 60*60*24 
@@ -103,22 +100,21 @@ exports.findUser = async (req,res)=>{
                     const token = jwt.sign({ sub: user._id, exp }, process.env.SECRET);
 
 // ---------------------------------Set cookie----------------------------
-                    try{
-                        res.cookie("Authorization", token,{
-                            expires: new Date(exp),
-                            httpOnly: true,
-                            sameSite: "lax",
-                            secure: process.env.NODE_ENV === "production",
-                        })
-                    }
-                    catch(err){
-                        console.log("There is an error in making a cookie",err)
-                    }
+                    // try{
+                    //     // res.cookie("Authorization", token,{
+                    //     //     expires: new Date(exp),
+                    //     //     httpOnly: true,
+                    //     //     sameSite: "lax",
+                    //     //     secure: process.env.NODE_ENV === "production",
+                    //     // })
+                    // }
+                    // catch(err){
+                    //     console.log("There is an error in making a cookie",err)
+                    // }
+                    console.log(user.methods)
                     res.cookie("email",req.body.email)
                     res.status(200).send("Logged in successfully")
                     // res.status(200).send(token)
-
-
                 //  res.send("Successfully logged in")
                 }
                 else{
@@ -138,7 +134,7 @@ exports.getUsers = (req,res)=>{
             res.send(data)
         })
         .catch(err=>{
-            res.status(500).send("Error",err)
+            res.status(500).send(err)
         })
     }
 // ROUTE WITH ERRORS 💀💀💀💀💀💀💀💀💀💀💀💀💀💀💀💀💀💀💀💀💀💀💀💀💀💀💀💀💀--------------------------------------------------------------
