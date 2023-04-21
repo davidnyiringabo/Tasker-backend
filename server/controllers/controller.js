@@ -4,6 +4,7 @@ const NotificationDb = require("../models/Notification.model")
 const bcyrpt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 const { ObjectId } = require("mongodb")
+const nodemailer = require("nodemailer")
 
 exports.createUser = async (req,res)=>{
     console.log(req.body)
@@ -175,5 +176,37 @@ exports.updateAscompleted = (req,res)=>{
 
 exports.saveFeedback = (req,res)=>{
     console.log(req.body)
+}
+
+exports.generateOTPAndSendEmail = (req,res)=>{
+    const email = req.body.email
+    const otp = req.otp
+    const nodemailer = require("nodemailer");
+    
+    async function sendEmail() {
+
+      let testAccount = await nodemailer.createTestAccount();
+    
+      let transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: "nyiringabodavid62@gmail.com", 
+          pass: "dmfiztttgskzuvvq", 
+        },
+      });
+    
+       await transporter.sendMail({
+        from: ' David NYIRINGABO,  developer of Tasker',
+        to: email,
+        subject: "Your recovery OTP from Tasker",
+        html: `<strong>This is your unique OTP , copy it and continue with the recovery process <br><br><br><h1>${otp}<h1></br></br></br></strong>`,
+        // text: `<h1>${otp}</h1>`,
+      })
+       .then(() =>{
+            res.send(`email sent successfully to ${email}`).status(200)
+         })
+    }
+    
+    sendEmail().catch(console.error);
 }
 

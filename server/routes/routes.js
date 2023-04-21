@@ -3,6 +3,8 @@ const route = express.Router()
 const path = require("path")
 const controllers = require("../controllers/controller")
 const requestAuth = require("../middlewares/requestAuth")
+const generateOTP = require("../middlewares/generateOTP")
+const verifyEmail = require("../middlewares/verifyEmail")
 
 route.get('/api',(req,res)=>{
     res.send('welcome to Titan corporation')
@@ -27,6 +29,7 @@ route.get("/api/getUser/:email",controllers.getUsers)
 route.put("/api/updateAscompleted/:id",controllers.updateAscompleted)
 route.get("/api/check-auth",requestAuth, controllers.checkAuth)
 route.post("/api/saveFeedback", controllers.saveFeedback)  
-route.post("/api/createTask",controllers.createNewTask)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+route.post("/api/createTask",controllers.createNewTask)
+route.post("/api/generateOTPSendEmail",[verifyEmail, generateOTP], controllers.generateOTPAndSendEmail)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
 
 module.exports = route
