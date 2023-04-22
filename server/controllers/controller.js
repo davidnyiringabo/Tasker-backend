@@ -199,7 +199,7 @@ exports.generateOTPAndSendEmail = (req,res)=>{
         to: email,
         subject: "Your recovery process from Tasker",
         html: ` 👋 Hello I'm David N. Developer of Tasker. <br> I've seen that you requested for password recovery.</br> <br> Click this button and continue with the process.
-        </br> <button style="background-color: #0075FF; border: none; padding: 10px; border-radius: 10px; text-decolation: none; "><a href="https://frabjous-fudge-baab76.netlify.app/" target="_blank" style="text-decolation: none; color: white; font-weight: 600;">Reset password</a></button>`,
+        </br> <button style="background-color: #0075FF; border: none; padding: 10px; border-radius: 10px; text-decolation: none; "><a href="https://frabjous-fudge-baab76.netlify.app/account-recovery/reset-password" target="_blank" style="text-decolation: none; color: white; font-weight: 600;">Reset password</a></button>`,
       })
        .then(() =>{
                 console.log("email sent successfully")
