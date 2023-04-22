@@ -5,16 +5,12 @@ const VerifyEmail = (req,res,next) =>{
 
     DbUsers.findOne({email: email})
             .then(response =>{
-                
-                if(!response){
-                    res.send("No account registered on that email. create new account instead.").status(401)
+                if(response){
+                     next()
+                }
+                else{
+                    res.send("No account registered on that email. create new account instead.").status(411)
                 }
             })
-            .catch(err=> console.log(err))
-
-
-            next()
-
 }
-
 module.exports = VerifyEmail

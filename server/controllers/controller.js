@@ -5,6 +5,7 @@ const bcyrpt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 const { ObjectId } = require("mongodb")
 const nodemailer = require("nodemailer")
+const OtpDB = require("../models/Otp.model")
 
 exports.createUser = async (req,res)=>{
     console.log(req.body)
@@ -184,8 +185,6 @@ exports.generateOTPAndSendEmail = (req,res)=>{
     const nodemailer = require("nodemailer");
     
     async function sendEmail() {
-
-      let testAccount = await nodemailer.createTestAccount();
     
       let transporter = nodemailer.createTransport({
         service: "gmail",
@@ -198,15 +197,50 @@ exports.generateOTPAndSendEmail = (req,res)=>{
        await transporter.sendMail({
         from: ' David NYIRINGABO,  developer of Tasker',
         to: email,
-        subject: "Your recovery OTP from Tasker",
-        html: `<strong>This is your unique OTP , copy it and continue with the recovery process <br><br><br><h1>${otp}<h1></br></br></br></strong>`,
-        // text: `<h1>${otp}</h1>`,
+        subject: "Your recovery process from Tasker",
+        html: ` 👋 Hello I'm David N. Developer of Tasker. <br> I've seen that you requested for password recovery.</br> <br> Click this button and continue with the process.
+        </br> <button style="background-color: #0075FF; border: none; padding: 10px; border-radius: 10px; text-decolation: none; "><a href="https://frabjous-fudge-baab76.netlify.app/" target="_blank" style="text-decolation: none; color: white; font-weight: 600;">Reset password</a></button>`,
       })
        .then(() =>{
-            res.send(`email sent successfully to ${email}`).status(200)
+                console.log("email sent successfully")
+                res.send(`email sent successfully to ${email}`).status(200)
+
+            // OtpDB.create({email: email, otp: otp})
+            //     .then((response)=> {  res.send(`email sent successfully to ${email}`).status(200)})
+            //     .catch(err => console.log(err))
          })
     }
     
-    sendEmail().catch(console.error);
+    sendEmail().catch(err=> res.send(err));
 }
 
+// exports.verifyOtp = async (req,res)=>{
+//     const otp = await OtpDB.findOne({otp: req.body.otp})
+//         .then(response =>{
+//             // console.log(response)
+//             // res.send(response)
+//         })
+//         .catch(err => console.log(err))
+
+//     if(!otp){
+//         res.send("invalid otp")
+//     }
+//     else{
+//         console.log(otp)
+//         res.send(otp)
+//     }
+//     console.log(otp)
+// }
+
+
+exports.resetPassword = async (req, res) =>{
+    const salt = await bcyrpt.genSalt(14)
+    const hashedPass = await bcyrpt.hash(req.body.password,salt)
+    DbUser.updateOne({email: req.body.email}, {$set: {password: hashedPass}})
+    .then(()=>{
+        res.send("updated successfully").status(201)
+    })
+    .catch(err=>{
+        console.log(err)
+    })
+}
